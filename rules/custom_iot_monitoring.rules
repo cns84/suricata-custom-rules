@@ -1,0 +1,35 @@
+# 1000000 - Samsung TV Firmware Check
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"Samsung TV Unexpected Firmware Check"; content:"/fwupdate"; http.uri; classtype:policy-violation; sid:1000000; rev:1;)
+
+# 1000001 - GE Appliance TLS SNI Match
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"GE Appliance TLS to Unknown Host"; tls.sni; content:"geappliances"; nocase; classtype:anomalous-activity; sid:1000001; rev:1;)
+
+# 1000002 - HubSpace Device DNS Beaconing
+alert dns $HOME_NET any -> $EXTERNAL_NET any (msg:"HubSpace Device DNS Beaconing"; content:".cloud-dns.com"; endswith; threshold: type limit, track by_src, count 10, seconds 60; classtype:suspicious-dns; sid:1000002; rev:1;)
+
+# 1000003 - Gaming Console Suspicious DNS Query
+alert dns $HOME_NET any -> $EXTERNAL_NET any (msg:"Gaming Console Suspicious DNS Query"; content:".xyz"; endswith; threshold: type limit, track by_src, count 5, seconds 60; classtype:suspicious-dns; sid:1000003; rev:1;)
+
+# 1000004 - ASUS Router Suspicious SSH Access
+alert tcp $EXTERNAL_NET any -> $HOME_NET 53282 (msg:"ASUS Router Suspicious SSH Access"; flags:S; flow:to_server,established; classtype:attempted-admin; sid:1000004; rev:1;)
+
+# 1000005 - ASUS Router CVE-2023-39780 Exploit Attempt
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ASUS Router CVE-2023-39780 Exploit Attempt"; content:"/cgi-bin/"; http.uri; content:"cmd="; nocase; classtype:web-application-attack; sid:1000005; rev:1;)
+
+# 1000006 - Genie Aladdin Setup Page Access Attempt
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"Genie Aladdin Setup Page Access Attempt"; content:"/setup"; http.uri; classtype:web-application-activity; sid:1000006; rev:1;)
+
+# 1000007 - Genie Aladdin XSS Attempt
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"Genie Aladdin XSS Attempt"; content:"<script>"; nocase; http.uri; classtype:web-application-attack; sid:1000007; rev:1;)
+
+# 1000008 - HP Printer Web Admin Access
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"HP M477fnw Web Admin Access Attempt"; content:"/hp/device"; http.uri; classtype:web-application-activity; sid:1000008; rev:1;)
+
+# 1000009 - Netgear Switch RCE Attempt
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"Netgear Switch RCE Attempt"; content:"/cgi-bin/"; http.uri; content:"command="; nocase; classtype:web-application-attack; sid:1000009; rev:1;)
+
+# 1000010 - Suspicious PowerShell Download
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"Suspicious PowerShell Download"; content:"powershell"; http.uri; content:"Invoke-WebRequest"; http.client_body; classtype:trojan-activity; sid:1000010; rev:1;)
+
+# 1000011 - Office Macro Document Download
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"Office Document with Macro Downloaded"; content:"application/vnd.ms-office"; http.header; classtype:bad-unknown; sid:1000011; rev:1;)
